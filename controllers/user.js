@@ -9,6 +9,8 @@ exports.userById = (req ,res,next,id) => {
             });
         }
         req.profile = user;
+   
         next();
     });
 };
+

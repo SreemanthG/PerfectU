@@ -8,7 +8,7 @@ router.post('/signup',userSignupValidator,signup);
 router.post('/signin',signin);
 router.get('/signout',signout);
 
-router.get('/hello', requireSignin , (req,res) => {
-    return res.send("work karo bhai");
-});
+//router.get('/hello', requireSignin , (req,res) => {
+ //   return res.send("work karo bhai");
+//});
 module.exports = router;

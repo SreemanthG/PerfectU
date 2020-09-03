@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken') //to generate signed token
 const expressJwt = require('express-jwt'); //for authorization check
 const {errorHandler} = require('../helpers/dbErrorHandler');
 
+
 //signup
 exports.signup = (req,res) => {
   // res.send({message: "please work"});
@@ -11,7 +12,7 @@ exports.signup = (req,res) => {
    user.save((err,user) => {
        if(err){
           return res.status(400).json({
-              err
+              error: errorHandler(err)
           });
        }
 
@@ -67,9 +68,34 @@ exports.signout = (req,res) => {
 };
 
 //requireSignin
-exports.requireSignin = expressJwt ({
-  secret: process.env.JWT_SECRET,
-  authProperty: "auth",
+exports.requireSignin =  expressJwt ({
+  secret: "something great secret",
+  requestProperty: "auth",
   algorithms:["HS256"]
 
 });
+
+//auth middleware
+exports.isAuth = (req,res,next) => {
+  
+  let user =  req.profile._id && req.auth._id && req.profile._id == req.auth._id 
+  console.log(user);
+   if(!user){
+     return res.status(403).json({
+       error: "Access denied"
+    });
+  
+  }
+ // res.json({ user });
+  next();
+};
+
+//admin middleware
+exports.isAdmin= (req,res,next) => {
+   if(req.profile.role === 0){
+     return res.status(403).json({
+       error: "Not an Admin! Access denied"
+    });
+   }
+  next();
+};
